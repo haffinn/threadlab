@@ -212,11 +212,11 @@ void sbuf_deinit(sbuf_t *sp)
 // Insert item onto the rear of shared buffer sp
 void sbuf_insert(sbuf_t *sp, int item)
 {
-    P(&sp->slots);                              // Wait for available slot
-    P(&sp->mutex);                              // Lock the buffer
-    sp->buf[(++sp->rear) % (sp->n)] = item;     // Insert the item
-    V(&sp->mutex);                              // Unlock the buffer
-    V(&sp->items);                              // Announce available item
+    // P(&sp->slots);                              // Wait for available slot
+    // P(&sp->mutex);                              // Lock the buffer
+    // sp->buf[(++sp->rear) % (sp->n)] = item;     // Insert the item
+    // V(&sp->mutex);                              // Unlock the buffer
+    // V(&sp->items);                              // Announce available item
 }
 
 // Remove and return the first item for buffer sp                   ATH Þarf möguleg að skila struct en ekki int
@@ -224,11 +224,11 @@ int sbuf_remove(sbuf_t *sp)
 {
     int item;
 
-    P(&sp->items);                              // Wait for available item
-    P(&sp->mutex);                              // Lock the buffer
-    item = sp->buf[(++sp->front) % (sp->n)];    // Remove the item
-    V(&sp->mutex);                              // Unlock the buffer
-    V(&sp->slots);                              // Announce the available slot
+    // P(&sp->items);                              // Wait for available item
+    // P(&sp->mutex);                              // Lock the buffer
+    // item = sp->buf[(++sp->front) % (sp->n)];    // Remove the item
+    // V(&sp->mutex);                              // Unlock the buffer
+    // V(&sp->slots);                              // Announce the available slot
 
     return item;                                // Return the item
 }
