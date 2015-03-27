@@ -132,26 +132,38 @@ static void customer_arrived(struct customer *customer, void *arg)
     
     /* TODO: Accept if there is an available chair */
     //Bida eftir lausum stól
-    sem_wait(&chairs->chair);
+    //IFSETNINGsem_wait(&chairs->chair);
     //Passa ad þad se bara einn sem ma breyta semaphorunni (gagnagrindinni) í einu
-    sem_wait(&chairs->mutex);
-    thrlab_accept_customer(customer);
+    //IFSETNINGsem_wait(&chairs->mutex);
+    //IFSETNINGthrlab_accept_customer(customer);
     //Halda utan um customer - finna bestu leid til ad halda utan um (ekki stack!)
     //engin virkni eins og er - tarf ad utfaera tad 
-    chairs->customer[0] = customer;
+    //IFSETNINGchairs->customer[0] = customer;
 
     //Ferlid fra TO DO er ad vidskiptavinur kemur og bidur, 
     //eg samþykki hann og nu leyfi eg öðrum að koma inn:
-    sem_post(&chairs->mutex);
+    //IFSETNINGsem_post(&chairs->mutex);
      
-    sem_post(&chairs->barber); 
+    //IFSETNINGsem_post(&chairs->barber); 
     //Passa ad customer stingi ekki af - halda honum - getum læst honum 
-    sem_wait(&customer->mutex); //nu er hann læstur
+    //IFSETNINGsem_wait(&customer->mutex); //nu er hann læstur
     
     /* TODO: Reject if there are no available chairs */
     //if setning sem segir 'ef tad er laust plass , ta accepta eg, annars rejecta tessum vidskiptavin
     //thrlab_reject_customer(customer);
-
+    
+    
+    //if- setningin
+    if(thrlab_get_num_chairs() == 0){
+	sem_wait(&chairs->chair);
+	sem_wait(&chairs->mutex);
+    	thrlab_accept_customer(customer);
+	chairs->customer[0] = customer;
+	sem_post(&chairs->mutex);
+	sem_post(&chairs->barber);
+	sem_wait(&customer->mutex);
+    }else
+	thrlab_reject_customer(customer);
 }
 
 static void *barber_work(void *arg)
