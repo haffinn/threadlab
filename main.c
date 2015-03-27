@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "help.h"
+#include <csapp.h>
 
 /*********************************************************
  * NOTE TO STUDENTS: Before you do anything else, please
@@ -204,7 +205,7 @@ void sbuf_init(sbuf_t *sp, int n)
 }
 
 // Clean up buffer sp
-void sbuf_deinit(sbut_t *sp)
+void sbuf_deinit(sbuf_t *sp)
 {
     free(sp->buf);
 }
