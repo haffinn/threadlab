@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "help.h"
-#include <csapp.h>
 
 /*********************************************************
  * NOTE TO STUDENTS: Before you do anything else, please
