@@ -67,6 +67,9 @@ void sbuf_deinit(sbuf_t *sp);
 void sbuf_insert(sbuf_t *sp, int item);
 int sbuf_remove(sbuf_t *sp);
 
+//Semaphores helper functions
+void P(sem_t *sem);
+void V(sem_t *sem);
 
 /**
  * Initialize data structures and create waiting barber threads.
@@ -154,16 +157,20 @@ static void customer_arrived(struct customer *customer, void *arg)
     
     
     //if- setningin
-    if(thrlab_get_num_chairs() == 0){
-	sem_wait(&chairs->chair);
-	sem_wait(&chairs->mutex);
-    	thrlab_accept_customer(customer);
-	chairs->customer[0] = customer;
-	sem_post(&chairs->mutex);
-	sem_post(&chairs->barber);
-	sem_wait(&customer->mutex);
-    }else
-	thrlab_reject_customer(customer);
+    if(thrlab_get_num_chairs() == 0)
+    {
+    	sem_wait(&chairs->chair);
+    	sem_wait(&chairs->mutex);
+        thrlab_accept_customer(customer);
+    	chairs->customer[0] = customer;
+    	sem_post(&chairs->mutex);
+    	sem_post(&chairs->barber);
+    	sem_wait(&customer->mutex);
+    }
+    else
+    {
+	   thrlab_reject_customer(customer);
+    }
 }
 
 static void *barber_work(void *arg)
@@ -212,11 +219,11 @@ void sbuf_deinit(sbuf_t *sp)
 // Insert item onto the rear of shared buffer sp
 void sbuf_insert(sbuf_t *sp, int item)
 {
-    // P(&sp->slots);                              // Wait for available slot
-    // P(&sp->mutex);                              // Lock the buffer
-    // sp->buf[(++sp->rear) % (sp->n)] = item;     // Insert the item
-    // V(&sp->mutex);                              // Unlock the buffer
-    // V(&sp->items);                              // Announce available item
+    P(&sp->slots);                              // Wait for available slot
+    P(&sp->mutex);                              // Lock the buffer
+    sp->buf[(++sp->rear) % (sp->n)] = item;     // Insert the item
+    V(&sp->mutex);                              // Unlock the buffer
+    V(&sp->items);                              // Announce available item
 }
 
 // Remove and return the first item for buffer sp                   ATH Þarf möguleg að skila struct en ekki int
@@ -224,13 +231,25 @@ int sbuf_remove(sbuf_t *sp)
 {
     int item;
 
-    // P(&sp->items);                              // Wait for available item
-    // P(&sp->mutex);                              // Lock the buffer
-    // item = sp->buf[(++sp->front) % (sp->n)];    // Remove the item
-    // V(&sp->mutex);                              // Unlock the buffer
-    // V(&sp->slots);                              // Announce the available slot
+    P(&sp->items);                              // Wait for available item
+    P(&sp->mutex);                              // Lock the buffer
+    item = sp->buf[(++sp->front) % (sp->n)];    // Remove the item
+    V(&sp->mutex);                              // Unlock the buffer
+    V(&sp->slots);                              // Announce the available slot
 
     return item;                                // Return the item
+}
+
+void P(sem_t *sem) 
+{
+    if (sem_wait(sem) < 0)
+    unix_error("P error");
+}
+
+void V(sem_t *sem) 
+{
+    if (sem_post(sem) < 0)
+    unix_error("V error");
 }
 
 
