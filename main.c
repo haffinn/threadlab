@@ -68,8 +68,8 @@ void sbuf_insert(sbuf_t *sp, int item);
 int sbuf_remove(sbuf_t *sp);
 
 //Semaphores helper functions
-void P(sem_t *sem);
-void V(sem_t *sem);
+void P(sem_t *sem) { sem_wait(sem); }
+void V(sem_t *sem) { sem_post(sem); }
 
 /**
  * Initialize data structures and create waiting barber threads.
@@ -239,19 +239,6 @@ int sbuf_remove(sbuf_t *sp)
 
     return item;                                // Return the item
 }
-
-void P(sem_t *sem) 
-{
-    if (sem_wait(sem) < 0)
-    unix_error("P error");
-}
-
-void V(sem_t *sem) 
-{
-    if (sem_post(sem) < 0)
-    unix_error("V error");
-}
-
 
 int main (int argc, char **argv)
 {
