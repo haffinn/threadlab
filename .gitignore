@@ -1,0 +1,5 @@
+help.o
+main.o
+thrlab
+thrlab-asan
+thrlab-tsan
