@@ -20,12 +20,6 @@
 
 static void *barber_work(void *arg);
 
-// Sbuf helper functions
-void sbuf_init(sbuf_t *sp, int n);
-void sbuf_deinit(sbuf_t *sp);
-void sbuf_insert(sbuf_t *sp, int item);
-int sbuf_remove(sbuf_t *sp);
-
 //Halda utan um biðstólana í stofunni
 struct chairs
 {
@@ -66,6 +60,12 @@ typedef struct
     sem_t slots;    // Counts available slots for insertion
     sem_t items;    // Counts available items for use
 } sbuf_t;
+
+// Sbuf helper functions
+void sbuf_init(sbuf_t *sp, int n);
+void sbuf_deinit(sbuf_t *sp);
+void sbuf_insert(sbuf_t *sp, int item);
+int sbuf_remove(sbuf_t *sp);
 
 
 /**
