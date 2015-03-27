@@ -13,8 +13,8 @@
  * === User information ===
  * User 1: arnara13 
  * SSN: 060889-3339
- * User 2:
- * SSN:
+ * User 2: hafthort12
+ * SSN: 220492-2819
  * === End User Information ===
  ********************************************************/
 
