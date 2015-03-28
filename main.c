@@ -67,7 +67,7 @@ struct simulator
 // Sbuf helper functions
 void sbuf_init(sbuf_t *sp, int n);
 void sbuf_deinit(sbuf_t *sp);
-void sbuf_insert(sbuf_t *sp, double item);
+void sbuf_insert(sbuf_t *sp, struct item *);
 double sbuf_remove(sbuf_t *sp);
 
 //Semaphores helper functions
@@ -241,7 +241,7 @@ static void *barber_work(void *arg)
 void sbuf_init(sbuf_t *sp, int n)
 {
     //sp->buf = calloc(n, sizeof(int));
-    sp->buf = calloc(n, sizeof(double));
+    sp->buf = calloc(n, sizeof(struct customer *));
     sp->n = n;                      // Buffer holds max of n items
     sp->front = sp->rear = 0;       // Empty buffer is front == rear
     sem_init(&sp->mutex, 0, 1);     // Binary semaphore for locking
@@ -256,7 +256,7 @@ void sbuf_deinit(sbuf_t *sp)
 }
 
 // Insert item onto the rear of shared buffer sp
-void sbuf_insert(sbuf_t *sp, double item)
+void sbuf_insert(sbuf_t *sp, struct item*)
 {
     P(&sp->slots);                              // Wait for available slot
     P(&sp->mutex);                              // Lock the buffer
@@ -266,9 +266,9 @@ void sbuf_insert(sbuf_t *sp, double item)
 }
 
 // Remove and return the first item for buffer sp                   ATH Þarf möguleg að skila struct en ekki int
-double sbuf_remove(sbuf_t *sp)
+struct customer* sbuf_remove(sbuf_t *sp)
 {
-    double item;
+    struct customer *item;
 
     P(&sp->items);                              // Wait for available item
     P(&sp->mutex);                              // Lock the buffer
