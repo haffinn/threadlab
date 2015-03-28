@@ -120,7 +120,7 @@ static void cleanup(struct simulator *simulator)
     /* Free chairs */
     //free(simulator->chairs.customer);
     // free(simulator->chairs.barberShop);
-    sbuf_deinit(&simulator->chairs.barberShop.buf);
+    sbuf_deinit(&simulator->chairs.barberShop);
 
     /* Free barber thread data */
     free(simulator->barber);
