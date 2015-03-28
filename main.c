@@ -256,7 +256,7 @@ void sbuf_deinit(sbuf_t *sp)
 }
 
 // Insert item onto the rear of shared buffer sp
-void sbuf_insert(sbuf_t *sp, struct customer*)
+void sbuf_insert(sbuf_t *sp, struct customer *customer)
 {
     P(&sp->slots);                              // Wait for available slot
     P(&sp->mutex);                              // Lock the buffer
