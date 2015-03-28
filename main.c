@@ -169,14 +169,14 @@ static void customer_arrived(struct customer *customer, void *arg)
             recjecta viðskiptavin
     */
 
-    int *slts;
-    int *itm;
+    int slts;
+    int itm;
 
     printf("Front: %d \n", chairs->barberShop.front);
     printf("Rear: %d \n", chairs->barberShop.rear);
     
-    sem_getvalue(&chairs->barberShop.slots, slts);
-    sem_getvalue(&chairs->barberShop.items, itm);
+    sem_getvalue(&chairs->barberShop.slots, &slts);
+    sem_getvalue(&chairs->barberShop.items, &itm);
 
     printf("Slots: %d \n", slts);
     prinft("Items: %d \n", itm);
