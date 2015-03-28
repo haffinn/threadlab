@@ -193,7 +193,7 @@ static void customer_arrived(struct customer *customer, void *arg)
 
         sbuf_insert(&chairs->barberShop, (int)customer);
 
-        printf("value: ", chairs->barberShop.bf);
+        printf("value: ", chairs->barberShop.buf);
 
     	sem_post(&chairs->mutex);
     	sem_post(&chairs->barber);
