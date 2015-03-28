@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "help.h"
+#include ""
 
 /*********************************************************
  * NOTE TO STUDENTS: Before you do anything else, please
@@ -239,8 +240,8 @@ static void *barber_work(void *arg)
 // Create an empty, bounded, shared FIFO (queue) buffer with n slots
 void sbuf_init(sbuf_t *sp, int n)
 {
-    //sp->buf = calloc(n, sizeof(int));
-    sp->buf = calloc(n, sizeof(struct customer *));
+    sp->buf = calloc(n, sizeof(int));
+    //sp->buf = calloc(n, sizeof(struct customer *));
     sp->n = n;                      // Buffer holds max of n items
     sp->front = sp->rear = 0;       // Empty buffer is front == rear
     sem_init(&sp->mutex, 0, 1);     // Binary semaphore for locking
