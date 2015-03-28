@@ -34,7 +34,7 @@ typedef struct
 //Halda utan um biðstólana í stofunni
 struct chairs
 {
-    struct customer **customer; /* Array of customers */
+    //struct customer **customer; /* Array of customers */
     int max;
     //Leid til ad læsa þegar vid erum ad uppfæra 
     //t.d customer (fyrir ofan) gagnagrindina
@@ -90,7 +90,7 @@ static void setup(struct simulator *simulator)
     sem_init(&chairs->barber, 0, 0); 
 
     /* Create chairs*/
-    chairs->customer = malloc(sizeof(struct customer *) * thrlab_get_num_chairs());
+    // chairs->customer = malloc(sizeof(struct customer *) * thrlab_get_num_chairs());
 
     // Sbuf circular buffer for waiting room chairs
     sbuf_init(&chairs->barberShop, thrlab_get_num_chairs());
@@ -118,7 +118,8 @@ static void setup(struct simulator *simulator)
 static void cleanup(struct simulator *simulator)
 {
     /* Free chairs */
-    free(simulator->chairs.customer);
+    //free(simulator->chairs.customer);
+    free(simulator->chairs.barberShop.buf);
 
     /* Free barber thread data */
     free(simulator->barber);
@@ -175,10 +176,10 @@ static void customer_arrived(struct customer *customer, void *arg)
     sem_getvalue(&chairs->barberShop.items, &itm);
 
 
-    printf("Front: %d \n", chairs->barberShop.front);
-    printf("Rear: %d \n", chairs->barberShop.rear);
-    printf("Slots: %d \n", slts);
-    printf("Items: %d \n", itm);
+    // printf("Front: %d \n", chairs->barberShop.front);
+    // printf("Rear: %d \n", chairs->barberShop.rear);
+    // printf("Slots: %d \n", slts);
+    // printf("Items: %d \n", itm);
 
     //if- setningin
     if(slts != 0)
@@ -209,7 +210,7 @@ static void *barber_work(void *arg)
 {
     struct barber *barber = arg;
     struct chairs *chairs = &barber->simulator->chairs;
-    struct customer *customer = 0; /* TODO: Fetch a customer from a chair */
+    struct customer *customer; /* TODO: Fetch a customer from a chair */
 
     /* Main barber loop */
     //
