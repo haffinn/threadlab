@@ -67,7 +67,7 @@ struct simulator
 // Sbuf helper functions
 void sbuf_init(sbuf_t *sp, int n);
 void sbuf_deinit(sbuf_t *sp);
-void sbuf_insert(sbuf_t *sp, int item);
+void sbuf_insert(sbuf_t *sp, struct cust);
 int sbuf_remove(sbuf_t *sp);
 
 //Semaphores helper functions
