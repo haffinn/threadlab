@@ -171,13 +171,12 @@ static void customer_arrived(struct customer *customer, void *arg)
 
     int slts;
     int itm;
-
-    printf("Front: %d \n", chairs->barberShop.front);
-    printf("Rear: %d \n", chairs->barberShop.rear);
-    
     sem_getvalue(&chairs->barberShop.slots, &slts);
     sem_getvalue(&chairs->barberShop.items, &itm);
 
+
+    printf("Front: %d \n", chairs->barberShop.front);
+    printf("Rear: %d \n", chairs->barberShop.rear);
     printf("Slots: %d \n", slts);
     printf("Items: %d \n", itm);
 
@@ -188,10 +187,10 @@ static void customer_arrived(struct customer *customer, void *arg)
     	sem_wait(&chairs->chair);
     	sem_wait(&chairs->mutex);
 
-        thrlab_accept_customer(customer);
-    	chairs->customer[0] = customer; // Ath laga Allir viðskipavinir yfirskrifa hvaða viðskiptavinur kemur næst
-
         sbuf_insert(&chairs->barberShop, customer);
+
+        thrlab_accept_customer(customer);
+    	// chairs->customer[0] = customer; // Ath laga Allir viðskipavinir yfirskrifa hvaða viðskiptavinur kemur næst
 
         // printf("value: %d", *chairs->barberShop.buf);
 
