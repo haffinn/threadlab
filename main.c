@@ -179,7 +179,7 @@ static void customer_arrived(struct customer *customer, void *arg)
     sem_getvalue(&chairs->barberShop.items, &itm);
 
     printf("Slots: %d \n", slts);
-    prinft("Items: %d \n", itm);
+    printf("Items: %d \n", itm);
     //if- setningin
     if(thrlab_get_num_chairs() == 0)
     {
