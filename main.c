@@ -189,7 +189,7 @@ static void customer_arrived(struct customer *customer, void *arg)
     	sem_wait(&chairs->mutex);
 
         thrlab_accept_customer(customer);
-    	//chairs->customer[0] = customer; // Ath laga Allir viðskipavinir yfirskrifa hvaða viðskiptavinur kemur næst
+    	chairs->customer[0] = customer; // Ath laga Allir viðskipavinir yfirskrifa hvaða viðskiptavinur kemur næst
 
         sbuf_insert(&chairs->barberShop, (int)customer);
 
