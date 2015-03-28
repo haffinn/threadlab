@@ -180,15 +180,18 @@ static void customer_arrived(struct customer *customer, void *arg)
 
     printf("Slots: %d \n", slts);
     printf("Items: %d \n", itm);
+
     //if- setningin
-    if(thrlab_get_num_chairs() == 0)
+    if(slts != 0)
     {
         //sem_wait(&customer->mutex);
     	sem_wait(&chairs->chair);
     	sem_wait(&chairs->mutex);
 
         thrlab_accept_customer(customer);
-    	chairs->customer[0] = customer; // Ath laga Allir viðskipavinir yfirskrifa hvaða viðskiptavinur kemur næst
+    	//chairs->customer[0] = customer; // Ath laga Allir viðskipavinir yfirskrifa hvaða viðskiptavinur kemur næst
+
+        sbuf_insert(&chairs->barberShop, customer);
 
     	sem_post(&chairs->mutex);
     	sem_post(&chairs->barber);
