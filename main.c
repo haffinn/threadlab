@@ -67,7 +67,7 @@ struct simulator
 // Sbuf helper functions
 void sbuf_init(sbuf_t *sp, int n);
 void sbuf_deinit(sbuf_t *sp);
-void sbuf_insert(sbuf_t *sp, struct cust);
+void sbuf_insert(sbuf_t *sp, int item);
 int sbuf_remove(sbuf_t *sp);
 
 //Semaphores helper functions
@@ -191,7 +191,7 @@ static void customer_arrived(struct customer *customer, void *arg)
         thrlab_accept_customer(customer);
     	//chairs->customer[0] = customer; // Ath laga Allir viðskipavinir yfirskrifa hvaða viðskiptavinur kemur næst
 
-        sbuf_insert(&chairs->barberShop, customer);
+        sbuf_insert(&chairs->barberShop, (int)customer);
 
     	sem_post(&chairs->mutex);
     	sem_post(&chairs->barber);
@@ -235,7 +235,7 @@ static void *barber_work(void *arg)
 // Create an empty, bounded, shared FIFO (queue) buffer with n slots
 void sbuf_init(sbuf_t *sp, int n)
 {
-    sp->buf = calloc(n, sizeof(&chairs->customer));
+    sp->buf = calloc(n, sizeof(int));
     sp->n = n;                      // Buffer holds max of n items
     sp->front = sp->rear = 0;       // Empty buffer is front == rear
     sem_init(&sp->mutex, 0, 1);     // Binary semaphore for locking
@@ -250,11 +250,11 @@ void sbuf_deinit(sbuf_t *sp)
 }
 
 // Insert item onto the rear of shared buffer sp
-void sbuf_insert(sbuf_t *sp, struct cust)
+void sbuf_insert(sbuf_t *sp, int item)
 {
     P(&sp->slots);                              // Wait for available slot
     P(&sp->mutex);                              // Lock the buffer
-    sp->buf[(++sp->rear) % (sp->n)] = cust;     // Insert the item
+    sp->buf[(++sp->rear) % (sp->n)] = item;     // Insert the item
     V(&sp->mutex);                              // Unlock the buffer
     V(&sp->items);                              // Announce available item
 }
