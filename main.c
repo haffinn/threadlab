@@ -235,7 +235,7 @@ static void *barber_work(void *arg)
 // Create an empty, bounded, shared FIFO (queue) buffer with n slots
 void sbuf_init(sbuf_t *sp, int n)
 {
-    sp->buf = calloc(n, sizeof(int));
+    sp->buf = calloc(n, sizeof(&chairs->customer));
     sp->n = n;                      // Buffer holds max of n items
     sp->front = sp->rear = 0;       // Empty buffer is front == rear
     sem_init(&sp->mutex, 0, 1);     // Binary semaphore for locking
@@ -250,11 +250,11 @@ void sbuf_deinit(sbuf_t *sp)
 }
 
 // Insert item onto the rear of shared buffer sp
-void sbuf_insert(sbuf_t *sp, int item)
+void sbuf_insert(sbuf_t *sp, struct cust)
 {
     P(&sp->slots);                              // Wait for available slot
     P(&sp->mutex);                              // Lock the buffer
-    sp->buf[(++sp->rear) % (sp->n)] = item;     // Insert the item
+    sp->buf[(++sp->rear) % (sp->n)] = cust;     // Insert the item
     V(&sp->mutex);                              // Unlock the buffer
     V(&sp->items);                              // Announce available item
 }
