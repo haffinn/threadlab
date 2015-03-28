@@ -22,7 +22,7 @@ static void *barber_work(void *arg);
 
 typedef struct 
 {
-    int *buf;       // Buffer array
+    struct customer *buf;       // Buffer array
     int n;          // Maximum number of slots
     int front;      // buf[(front+1)%n] is first item
     int rear;       // buf[rear%n] is last item
