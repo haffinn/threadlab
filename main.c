@@ -154,7 +154,7 @@ static void customer_arrived(struct customer *customer, void *arg)
     
     
     //if- setningin
-    //if(thrlab_get_num_chairs() < 1){
+    if(thrlab_get_num_chairs() == 0){
 	sem_wait(&chairs->chair);
 	sem_wait(&chairs->mutex);
     	thrlab_accept_customer(customer);
@@ -162,8 +162,8 @@ static void customer_arrived(struct customer *customer, void *arg)
 	sem_post(&chairs->mutex);
 	sem_post(&chairs->barber);
 	sem_wait(&customer->mutex);
-    //}else
-	//thrlab_reject_customer(customer);
+    }else
+	thrlab_reject_customer(customer);
 }
 
 static void *barber_work(void *arg)
