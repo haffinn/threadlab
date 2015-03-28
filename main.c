@@ -93,7 +93,7 @@ static void setup(struct simulator *simulator)
     chairs->customer = malloc(sizeof(struct customer *) * thrlab_get_num_chairs());
 
     // Sbuf circular buffer for waiting room chairs
-    sbuf_init(chairs->barberShop, thrlab_get_num_chairs());
+    sbuf_init(&chairs->barberShop, thrlab_get_num_chairs());
     	
     /* Create barber thread data */
     simulator->barberThread = malloc(sizeof(pthread_t) * thrlab_get_num_barbers());
