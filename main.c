@@ -67,8 +67,8 @@ struct simulator
 // Sbuf helper functions
 void sbuf_init(sbuf_t *sp, int n);
 void sbuf_deinit(sbuf_t *sp);
-void sbuf_insert(sbuf_t *sp, struct item *);
-double sbuf_remove(sbuf_t *sp);
+void sbuf_insert(sbuf_t *sp, struct customer *);
+struct customer* sbuf_remove(sbuf_t *sp);
 
 //Semaphores helper functions
 void P(sem_t *sem) { sem_wait(sem); }
@@ -191,7 +191,7 @@ static void customer_arrived(struct customer *customer, void *arg)
         thrlab_accept_customer(customer);
     	chairs->customer[0] = customer; // Ath laga Allir viðskipavinir yfirskrifa hvaða viðskiptavinur kemur næst
 
-        sbuf_insert(&chairs->barberShop, (int)customer);
+        sbuf_insert(&chairs->barberShop, customer);
 
         printf("value: %d", *chairs->barberShop.buf);
 
@@ -256,11 +256,11 @@ void sbuf_deinit(sbuf_t *sp)
 }
 
 // Insert item onto the rear of shared buffer sp
-void sbuf_insert(sbuf_t *sp, struct item*)
+void sbuf_insert(sbuf_t *sp, struct customer*)
 {
     P(&sp->slots);                              // Wait for available slot
     P(&sp->mutex);                              // Lock the buffer
-    sp->buf[(++sp->rear) % (sp->n)] = item;     // Insert the item
+    sp->buf[(++sp->rear) % (sp->n)] = customer;     // Insert the item
     V(&sp->mutex);                              // Unlock the buffer
     V(&sp->items);                              // Announce available item
 }
