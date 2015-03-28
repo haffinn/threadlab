@@ -18,6 +18,18 @@
  * === End User Information ===
  ********************************************************/
 
+/*******************************
+ * GENERAL DESCRIPTION
+ ***********************************************
+ * Customers arrive to the barbershop. If there
+ * is not enough seats in the waiting room they
+ * need to return. 
+ * If there is enough seats, they wait until
+ * they get permission from barber.
+ * Barber cuts customers hair and won't let them
+ * out until he's done. 
+ ***********************************************/
+
 static void *barber_work(void *arg);
 
 typedef struct 
@@ -64,9 +76,9 @@ struct customer* sbuf_remove(sbuf_t *sp);
 void P(sem_t *sem) { sem_wait(sem); }
 void V(sem_t *sem) { sem_post(sem); }
 
-/**
- * Initialize data structures and create waiting barber threads.
- */
+
+/* Initializes how many chairs and barbers are
+ * */
 static void setup(struct simulator *simulator)
 {
     struct chairs *chairs = &simulator->chairs;
@@ -112,28 +124,25 @@ static void cleanup(struct simulator *simulator)
     free(simulator->barberThread);
 }
 
-/**
- * Called in a new thread each time a customer has arrived.
- */
+/*
+ *Handles when customer arrives to the shop until he gets a haircut
+ *If there are enough seats barber accepts the customer, else
+ *else rejects him.
+*/
 static void customer_arrived(struct customer *customer, void *arg)
 {
     struct simulator *simulator = arg;
     struct chairs *chairs = &simulator->chairs;
     
     sem_init(&customer->mutex, 0, 0);
+	
 
-    /* --- Sauðakóði
-        IF (laust pláss)
-            accepta viðskiptavin
-        ELSE
-            recjecta viðskiptavin
-    */
     int slts;
     int itm;
     sem_getvalue(&chairs->barberShop.slots, &slts);
     sem_getvalue(&chairs->barberShop.items, &itm);
 
-    //if- setningin
+    //Check if there are enough seats for customer
     if(slts != 0)
     {
     	sem_wait(&chairs->chair);
@@ -144,7 +153,7 @@ static void customer_arrived(struct customer *customer, void *arg)
         thrlab_accept_customer(customer);
 
     	sem_post(&chairs->mutex);
-    	sem_post(&chairs->barber);
+    	sem_post(&chairs->barber);    
 
     	sem_wait(&customer->mutex);
     }
@@ -153,7 +162,9 @@ static void customer_arrived(struct customer *customer, void *arg)
 	   thrlab_reject_customer(customer);
     }
 }
-
+/*
+ *Barber starts cutting customer's hair and when done he dismiss 
+ *the customer. */
 static void *barber_work(void *arg)
 {
     struct barber *barber = arg;
@@ -179,7 +190,7 @@ static void *barber_work(void *arg)
     }
     return NULL;
 }
-// Create an empty, bounded, shared FIFO (queue) buffer with n slots
+/* Create an empty, bounded, shared FIFO (queue) buffer with n slots */
 void sbuf_init(sbuf_t *sp, int n)
 {
     sp->buf = calloc(n, sizeof(int));
@@ -190,13 +201,13 @@ void sbuf_init(sbuf_t *sp, int n)
     sem_init(&sp->items, 0, 0);     // Initially, buf has zero items
 }
  
-// Clean up buffer sp
+/* Clean up buffer sp */
 void sbuf_deinit(sbuf_t *sp)
 {
     free(sp->buf);
 }
 
-// Insert item onto the rear of shared buffer sp
+/* Insert item onto the rear of shared buffer sp */
 void sbuf_insert(sbuf_t *sp, struct customer *customer)
 {
     P(&sp->slots);                              // Wait for available slot
@@ -206,7 +217,7 @@ void sbuf_insert(sbuf_t *sp, struct customer *customer)
     V(&sp->items);                              // Announce available item
 }
 
-// Remove and return the first item for buffer sp
+/* Remove and return the first item for buffer sp */
 struct customer* sbuf_remove(sbuf_t *sp)
 {
     struct customer *item;
