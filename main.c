@@ -220,7 +220,7 @@ static void *barber_work(void *arg)
         sem_wait(&chairs->mutex);
         /* TODO: Here you must add you semaphores and locking logic */
 
-        //customer = chairs->customer[0];     /* TODO: You must choose the customer */
+        customer = chairs->customer[0];     /* TODO: You must choose the customer */
         thrlab_prepare_customer(customer, barber->room);
         sem_post(&chairs->mutex);           //bætt vid i fyrirlestri
         sem_post(&chairs->chair);           //bætt vid, er samt i raun vitlaust , þvi vid turfum ad visa fra ef ekki laust sæti
