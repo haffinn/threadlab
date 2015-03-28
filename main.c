@@ -220,7 +220,10 @@ static void *barber_work(void *arg)
         sem_wait(&chairs->mutex);
         /* TODO: Here you must add you semaphores and locking logic */
 
-        customer = chairs->customer[0];     /* TODO: You must choose the customer */
+        // customer = chairs->customer[0];     /* TODO: You must choose the customer */
+
+        customer = sbuf_remove(&chairs->barberShop);
+
         thrlab_prepare_customer(customer, barber->room);
         sem_post(&chairs->mutex);           //bætt vid i fyrirlestri
         sem_post(&chairs->chair);           //bætt vid, er samt i raun vitlaust , þvi vid turfum ad visa fra ef ekki laust sæti
@@ -237,7 +240,8 @@ static void *barber_work(void *arg)
 // Create an empty, bounded, shared FIFO (queue) buffer with n slots
 void sbuf_init(sbuf_t *sp, int n)
 {
-    sp->buf = calloc(n, sizeof(int));
+    //sp->buf = calloc(n, sizeof(int));
+    sp->buf = calloc(n, sizeof(double));
     sp->n = n;                      // Buffer holds max of n items
     sp->front = sp->rear = 0;       // Empty buffer is front == rear
     sem_init(&sp->mutex, 0, 1);     // Binary semaphore for locking
@@ -252,7 +256,7 @@ void sbuf_deinit(sbuf_t *sp)
 }
 
 // Insert item onto the rear of shared buffer sp
-void sbuf_insert(sbuf_t *sp, int item)
+void sbuf_insert(sbuf_t *sp, double item)
 {
     P(&sp->slots);                              // Wait for available slot
     P(&sp->mutex);                              // Lock the buffer
@@ -262,9 +266,9 @@ void sbuf_insert(sbuf_t *sp, int item)
 }
 
 // Remove and return the first item for buffer sp                   ATH Þarf möguleg að skila struct en ekki int
-int sbuf_remove(sbuf_t *sp)
+double sbuf_remove(sbuf_t *sp)
 {
-    int item;
+    double item;
 
     P(&sp->items);                              // Wait for available item
     P(&sp->mutex);                              // Lock the buffer
