@@ -169,6 +169,9 @@ static void customer_arrived(struct customer *customer, void *arg)
             recjecta viðskiptavin
     */
     printf("Front: %d \n", chairs->barberShop.front);
+    printf("Rear: %d \n", chairs->barberShop.rear);
+    printf("Slots: %d \n", chairs->barberShop.slots);
+    prinft("Items: %d \n", chairs->barberShop.items);
     //if- setningin
     if(thrlab_get_num_chairs() == 0)
     {
