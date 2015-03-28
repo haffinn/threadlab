@@ -168,7 +168,7 @@ static void customer_arrived(struct customer *customer, void *arg)
         ELSE
             recjecta viðskiptavin
     */
-
+    printf("Front: %c", chairs->barberShop.front);
     //if- setningin
     if(thrlab_get_num_chairs() == 0)
     {
